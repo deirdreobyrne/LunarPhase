@@ -92,7 +92,7 @@ My first task was to collect a large dataset against which I could run a fitting
 
 ![Solex settings](img/solex.png)
 
-I ended up with two CSV files - one each for the sun and moon - containing Julian date, right ascension, declination, and distance data.
+After some *vim* magic I ended up with two CSV files - one each for the sun and moon - containing Julian date, right ascension, declination, and distance data.
 
 The next step was to import that data into [GNU Octave](https://octave.org/index.html) and convert it into a lunar phase dataset.
 
@@ -151,10 +151,6 @@ $$
 k = \left( {1 - cos(i)} \over 2 \right)
 $$
 
-## Now the fun starts - fitting!
-
-to be written
-
 ## Δt — the boogeyman of astronomical predictions
 
 Solex works in TDT, whereas our clocks work in UTC, and the difference between the two (imaginatively called Δt) is not constant and not predictable (due to minor irregularities in the rotation of the earth caused by, amongst many other things, earthquakes). I adopted a very simple and reasonably accurate formula (for historical times, anyway) for Δt —
@@ -167,6 +163,10 @@ where *d* is the number of days elapsed since 1970 Jan 1 00:00:00 UTC.
 
 ![delta-t](img/deltat.svg)
 
-## Refining the result
+## Fitting
 
-to be written
+In the end, I was using two different methods to fit the equation to the data.
+
+The fastest was using the Octave `leasqr` function. This, as the name implies, gives a least square fit to the sum of the squares of the error in each of the phase values. A sample Octave script is in [octave/leasqrfit.m](octave/leasqrfit.m).
+
+A slower way was to use the Octave `fminsearch` function. This allowed a fit which minimised the maximum error. *Note that at present (16 Jun 2022) the result given above isn't such a fit* in spite of the fact that such a fit usually gives better results. I'll get on to it... A sample Octave script is in [octave/minerrfit.m](octave/minerrfit.m).

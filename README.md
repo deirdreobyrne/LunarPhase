@@ -95,8 +95,6 @@ end;
 printf("\nDONE!\n");
 
 csvwrite("i.csv",ang);
-
-
 ```
 
 This actually creates a CSV file containing the number of days since 2000 Jan 1.5 (a standard epoch in astronomy), with a value indicative of the selenocentric elongation of the Earth. I had intended to calculate the latter using the following formulae (taken from Jean Meeus' excellent 1991 book *Astronomical Algorithms*)
@@ -109,15 +107,15 @@ $$
 i = tan^{-1} \left( {{R_s sin (\psi)} \over {R_m - R_s cos (\psi)}} \right)
 $$
 
-where $\alpha_s, \delta_s, R_s$ are the sun's right ascension, declination and distance; $\alpha_m, \delta_m, R_m$ are the moon's right ascension, declination and distance; $\psi$ is the geocentric elongation of the moon from the sun, and $i$ is the selenocentric elongation of the earth from the sun. However, due to a futile attempt to make $i$ continually increasing with time, I ended up using a modified version of the second formula above —
+where&nbsp; $\alpha_s, \delta_s, R_s $ are the sun's right ascension, declination and distance;&nbsp; $\alpha_m, \delta_m, R_m $ are the moon's right ascension, declination and distance;&nbsp; $\psi $ is the geocentric elongation of the moon from the sun, and&nbsp; $i $ is the selenocentric elongation of the earth from the sun. However, due to a futile attempt to make&nbsp; $i $ continually increasing with time, I ended up using a modified version of the second formula above —
 
 $$
 i = \psi + tan^{-1} \left( {R_m sin (\psi)} \over {R_s - R_m cos(\psi)} \right)
 $$
 
-This gives an angle $i$ which is the *complement* of the selenographic elongation of the earth from the sun. It is also, technically, a worse way of doing the calculation due to the difficulties in calculating the inverse cosine of small angles. However I believe my error made no substantive difference.
+This gives an angle&nbsp; $i$ which is the *complement* of the selenographic elongation of the earth from the sun. It is also, technically, a worse way of doing the calculation due to the difficulties in calculating the inverse cosine of small angles. However I believe my error made no substantive difference.
 
-When $i$ is the complement of the selenocentric elongation of the earth, then the phase is simply
+When&nbsp; $i$ is the complement of the selenocentric elongation of the earth, then the phase is simply
 
 $$
 k = \left( {1 - cos(i)} \over 2 \right)
@@ -127,9 +125,9 @@ $$
 
 to be written
 
-## $\Delta t$ — the boogeyman of astronomical predictions
+## Δt — the boogeyman of astronomical predictions
 
-Solex works in TDT, whereas our clocks work in UTC, and the difference between the two is not constant and not predictable (due to minor irregularities in the rotation of the earth caused by, amongst many other things, earthquakes). I adopted a very simple and reasonably accurate formula (for historical times, anyway) for $\Delta t$ —
+Solex works in TDT, whereas our clocks work in UTC, and the difference between the two (imaginatively called Δt) is not constant and not predictable (due to minor irregularities in the rotation of the earth caused by, amongst many other things, earthquakes). I adopted a very simple and reasonably accurate formula (for historical times, anyway) for $\Delta t$ —
 
 $$
 \Delta t (seconds) = 45 + 50 { d \over 36525}

@@ -80,7 +80,7 @@ This table gives the maximum error in the period 1900 - 2149 when some terms are
 | ... sin(l+2.0*f)       | 0.001953     |
 | *nothing*              | 0.001951     |
 
-So if an accuracy of 9% is sufficient, the equation can be reduced to `(1.0 - cos(d))/2.0`, and hence there is no need to calculate *l, f* or *m*.
+So if an accuracy of 9% is sufficient, the equation can be reduced to `(1.0 - cos(d))/2.0`, and hence there is no need to calculate *f, l* or *m*.
 
 ## Derivation
 

@@ -42,8 +42,6 @@ double getPhase(double sec) {
       - 1.004011788792417e-04 * sin(l+2.0*f)
       ))/2.0;
 }
-
-
 ```
 
 The argument is the number of seconds since 1970 Jan 1 00:00:00 UTC. The return result is the fraction of the moon's disk illuminated by the sun as seen from the earth. The accuracy is to within 0.002 during the entire period 1900-2149.
@@ -53,6 +51,36 @@ Note that the result will not be *exactly* 0.0 at new moon, 1.0 at full moon, or
 Note also that the only way of determining if the moon is waxing or waning is to take the derivative of the function in `getPhase(double)`. Alternatively a second call to `getPhase(double)`could be made with an argument a few seconds into the future to see if the result is increasing or decreasing.
 
 Finally, the output of `getPhase(double)`will (almost certainly) *never* be 1.0 or 0.0. This is because, at new and full moon, the moon is north or south enough that a tiny amount of it remains illuminated. Indeed if the output of `getPhase(double)`is close to 1.0, it could mean that the moon is actually eclipsed by the earth!
+
+## Accuracy, or speed and small footprint?
+
+If you cut off some of the terms in the equation in `getPhase(double)`you can increase the speed and reduce the footprint of the algorithm in a trade-off with accuracy. This could be useful, for instance, in a smartwatch which has only a small screen anyway in which to display the moon's phase, and which has limited resources which need to be managed.
+
+This table gives the maximum error in the period 1900 - 2149 when some terms are omitted.
+
+| **Omit from**          | **Accuracy** |
+| ----------------------:|:------------:|
+| ... sin(l)             | 0.086072     |
+| ... sin(m)             | 0.036238     |
+| ... sin(2.0*d-l)       | 0.019950     |
+| ... sin(2.0*d)         | 0.010285     |
+| ... sin(2.0*l)         | 0.005221     |
+| ... sin(d)             | 0.003594     |
+| ... sin(2.0*f)         | 0.002930     |
+| ... sin(2.0*d+l)       | 0.002823     |
+| ... sin(2.0*(f-d))     | 0.002482     |
+| ... sin(2.0*(d-l))     | 0.002451     |
+| ... sin(2.0*d-m-l)     | 0.002298     |
+| ... sin(2.0*d-m)       | 0.002161     |
+| ... sin(m-l)           | 0.002052     |
+| ... sin(m+l)           | 0.001997     |
+| ... sin(l-2.0*f)       | 0.001957     |
+| ... sin(3.0*l)         | 0.001964     |
+| ... sin(2.0*(2.0*d-l)) | 0.001954     |
+| ... sin(l+2.0*f)       | 0.001953     |
+| *nothing*              | 0.001951     |
+
+So if an accuracy of 9% is sufficient, the equation can be reduced to `(1.0 - cos(d))/2.0`, and hence there is no need to calculate *l, f* or *m*.
 
 ## Derivation
 
@@ -140,7 +168,3 @@ where *d* is the number of days elapsed since 1970 Jan 1 00:00:00 UTC.
 ## Refining the result
 
 to be written
-
-
-
-

@@ -1,5 +1,10 @@
 # Lunar Phases
 
+## Work in progress
+
+This is a work in progress, in that fourier analysis shows a stubborn component in or around the frequency of "d". I intend to do another run (maybe 1,500 years at a
+frequency of 1 day) to try and resolve the issue.
+
 ## tl;dr - the algorithm
 
 An algorithm for calculating the phase of the moon between 1900 and 2149 is presented below.

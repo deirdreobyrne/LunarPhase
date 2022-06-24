@@ -1,10 +1,5 @@
 # Lunar Phases
 
-## Work in progress
-
-This is a work in progress, in that fourier analysis shows a stubborn component in or around the frequency of "d". I intend to do another run (maybe 1,500 years at a
-frequency of 1 day) to try and resolve the issue.
-
 ## tl;dr - the algorithm
 
 An algorithm for calculating the phase of the moon between 1900 and 2149 is presented below.
@@ -16,48 +11,33 @@ This algorithm actually calculates the fraction of the moon's disk that is illum
 
 /**
  * @arg sec the number of seconds since 1970 Jan 1 00:00:00 UTC
- * @return the illuminated fraction of the moon's disk as seen from earth
+ * @arg is_waxing if not null, then will contain true if the moon is waxing
+ * @return the illuminated fraction of the moon's disk as seen from earth,
+ *         accurate to 0.3% during the entire period 1970 - 2149
  *
  * @author github.com/deirdreobyrne
  */
-double getPhase(double sec) {
+double getPhase(double sec, int *is_waxing) {
 
-  double l = fmod(4.455916788395823 + sec/378902.2550719889, 2.0*M_PI);
-  double f = fmod(3.711912015016090 + sec/374194.9107230363, 2.0*M_PI);
-  double m = fmod(6.244925278898623 + sec/5022680.344082363, 2.0*M_PI);
-  double d = fmod(4.847287446660956 -
-             (sec/1.0595e18 - sec)/406074.7508723456, 2.0*M_PI);
+  double d = fmod(4.847408287988257 + sec/406074.7465115577, 2.0*M_PI);
+  double m = fmod(6.245333801867877 + sec/5022682.784840698, 2.0*M_PI);
+  double l = fmod(4.456038755040014 + sec/378902.2499653011, 2.0*M_PI);
+  double i = fmod(d
+          +1.089809730923715e-01 * sin(l)
+          -3.614132757006379e-02 * sin(m)
+          +2.228248661252023e-02 * sin(2.0*d-l)
+          +1.353592753655652e-02 * sin(2.0*d)
+          +4.238560208195022e-03 * sin(2.0*l)
+          +1.961408105275610e-03 * sin(d),2*M_PI);
 
-  return (1.0 - cos ( d
-          +1.095592850837296e-01 * sin(l)
-          -3.649736985992089e-02 * sin(m)
-          +2.202605149250539e-02 * sin(2.0*d-l)
-          +1.408267088017852e-02 * sin(2.0*d)
-          +3.735791629462980e-03 * sin(2.0*l)
-          +1.951014794328968e-03 * sin(d)
-          -1.836366081017675e-03 * sin(2.0*f)
-          +1.295101137710685e-03 * sin(4.0*d)
-          +1.008575724100870e-03 * sin(2.0*(d-l))
-          +9.940741485840730e-04 * sin(2.0*d-m-l)
-          +9.515708542153308e-04 * sin(2.0*d+l)
-          -9.031978159721983e-04 * sin(2.0*(d+f))
-          +8.091606805138698e-04 * sin(2.0*(f-d))
-          +7.949457895819001e-04 * sin(2.0*d-m)
-          -7.165256461239489e-04 * sin(m-l)
-          -5.333556551468582e-04 * sin(m+l)
-          -3.823095408020891e-04 * sin(2.0*m)
-          -2.600546963158116e-04 * sin(d-l)
-        ))/2.0;
+  if (is_waxing) {
+    *is_waxing = (i <= M_PI);
+  }
+  return (1.0 - cos(i))/2.0;
 }
 ```
 
-The argument is the number of seconds since 1970 Jan 1 00:00:00 UTC. The return result is the fraction of the moon's disk illuminated by the sun as seen from the earth. The accuracy is to within 0.002 during the entire period 1900-2149.
-
-Note that the result will not be *exactly* 0.0 at new moon, 1.0 at full moon, or 0.5 at the quarters. This is (mostly) because the definition of those 4 "phases of the moon" doesn't, as such, depend on the illuminated fraction of the moon's disk.
-
-Note also that the only way of determining if the moon is waxing or waning is to take the derivative of the function in `getPhase(double)`. Alternatively a second call to `getPhase(double)`could be made with an argument a few seconds into the future to see if the result is increasing or decreasing.
-
-Finally, the output of `getPhase(double)`will (almost certainly) *never* be 1.0 or 0.0. This is because, at new and full moon, the moon is north or south enough that a tiny amount of it remains illuminated. Indeed if the output of `getPhase(double)`is close to 1.0, it could mean that the moon is actually eclipsed by the earth!
+The argument is the number of seconds since 1970 Jan 1 00:00:00 UTC. The return result is the fraction of the moon's disk illuminated by the sun as seen from the earth. The accuracy is to within 0.003 during the entire period 1900-2149.
 
 ## Accuracy, or speed and small footprint?
 
@@ -65,29 +45,16 @@ If you cut off some of the terms in the equation in `getPhase(double)`you can in
 
 This table gives the maximum error in the period 1900 - 2149 when some terms are omitted.
 
-| **Omit from**      | **Accuracy** |
-| ------------------:|:------------:|
-| ... sin(l)         | 0.086059     |
-| ... sin(m)         | 0.036332     |
-| ... sin(2.0*d-l)   | 0.019999     |
-| ... sin(2.0*d)     | 0.010258     |
-| ... sin(2.0*l)     | 0.005273     |
-| ... sin(d)         | 0.003702     |
-| ... sin(2.0*f)     | 0.002846     |
-| ... sin(4.0*d)     | 0.002603     |
-| ... sin(2.0*(d-l)) | 0.002304     |
-| ... sin(2.0*d-m-l) | 0.002256     |
-| ... sin(2.0*d+l)   | 0.002143     |
-| ... sin(2.0*(d+f)) | 0.002083     |
-| ... sin(2.0*(f-d)) | 0.002071     |
-| ... sin(2.0*d-m)   | 0.002057     |
-| ... sin(m-l)       | 0.002001     |
-| ... sin(m+l)       | 0.001958     |
-| ... sin(2.0*m)     | 0.001954     |
-| ... sin(d-l)       | 0.001943     |
-| *nothing*          | 0.001937     |
+| **Omit starting from** | **Accuracy** |
+| -----------------------:|:------------:|
+| ... sin(l)         | 0.085961     |
+| ... sin(m)         | 0.036612     |
+| ... sin(2.0*d-l)   | 0.020229     |
+| ... sin(2.0*d)     | 0.010333     |
+| ... sin(2.0*l)     | 0.004811     |
+| ... sin(d)         | 0.003269     |
+| *nothing*          | 0.002875     |
 
-So if an accuracy of 9% is sufficient, the equation can be reduced to `(1.0 - cos(d))/2.0`, and hence there is no need to calculate *f, l* or *m*.
 
 ## Derivation
 

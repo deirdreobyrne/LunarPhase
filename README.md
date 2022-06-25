@@ -2,7 +2,7 @@
 
 ## tl;dr - the algorithm
 
-An algorithm for calculating the phase of the moon between 1900 and 2149 is presented below.
+An algorithm for calculating the phase of the moon between 1970 and 2149 is presented below.
 
 This algorithm actually calculates the fraction of the moon's disk that is illuminated by the sun as seen from the earth. This is equal to the fraction of the moon's diameter illuminated by the sun along every chord perpendicular to the axis of the phase.
 
@@ -38,13 +38,13 @@ double getPhase(double sec, int *is_waxing) {
 }
 ```
 
-The argument is the number of seconds since 1970 Jan 1 00:00:00 UTC. The return result is the fraction of the moon's disk illuminated by the sun as seen from the earth. The accuracy is to within 0.003 during the entire period 1900-2149.
+The argument is the number of seconds since 1970 Jan 1 00:00:00 UTC. The return result is the fraction of the moon's disk illuminated by the sun as seen from the earth. The accuracy is to within 0.003 during the entire period 1970-2149.
 
 ## Accuracy, or speed and small footprint?
 
 If you cut off some of the terms in the equation for `double i` in `getPhase(...)` you can increase the speed and reduce the footprint of the algorithm in a trade-off with accuracy. This could be useful, for instance, in a smartwatch which has only a small screen anyway in which to display the moon's phase, and which has limited resources which need to be managed.
 
-This table gives the maximum error in the period 1900 - 2149 when some terms are omitted.
+This table gives the maximum error in the period 1970 - 2149 when some terms are omitted.
 
 | **Omit starting from** | **Accuracy** |
 | ----------------------:|:------------:|
@@ -74,7 +74,7 @@ where *d* is the number of days elapsed since 1970 Jan 1 00:00:00 UTC.
 
 ### Calculating a lunar phase dataset
 
-My first step was to get a dataset. I decided on the period from 1970 Jan 1 00:00:00 using a step size of 3 hours for $2^{19}$ steps (524,288 steps), making 2149 Jun 6 21:00:00 the last entry in the dataset.
+My first step was to get a dataset. I decided on the period from 1970 Jan 1 00:00:00 using a step size of 3 hours for 2<sup>19</sup> steps (524,288 steps), making 2149 Jun 6 21:00:00 the last entry in the dataset.
 
 My first step was to get a dataset of phases of the moon. To that end, I used the excellent [Solex](http://www.solexorb.it/) program using the settings below
 
@@ -146,7 +146,7 @@ L = @(t,p) polyval([1/p(5),p(6)],t);
 func = @(t,p) (1-cos(D(t,p) + p(7)*sin(L(t,p)) + p(8)*sin(M(t,p)) ...
       + p(9)*sin(2*D(t,p)-L(t,p)) + p(10)*sin(2*D(t,p)) ...
       + p(11)*sin(D(t,p)) + p(12)*sin(2*L(t,p))))/2;
-      
+
 max(abs(phase-func(t,args)))
 
 [myphase,newargs,cvg,iter]=leasqr(t, phase, args, func, 0.0000001, 20, ones(size(t)), dargs);
@@ -156,5 +156,4 @@ newargs - args
 newargs
 
 max(abs(phase-myphase))
-
 ```

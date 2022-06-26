@@ -11,7 +11,8 @@ This algorithm actually calculates the fraction of the moon's disk that is illum
 
 /**
  * @arg sec the number of seconds since 1970 Jan 1 00:00:00 UTC
- * @arg is_waxing if not null, then will contain true if the moon is waxing
+ * @arg is_waxing if not null, then will contain true if the moon
+ *                is waxing
  * @return the illuminated fraction of the moon's disk as seen from earth,
  *         accurate to 0.3% during the entire period 1970 - 2149
  *
@@ -29,7 +30,7 @@ double getPhase(double sec, int *is_waxing) {
           +1.353592753655652e-02 * sin(2.0*d)
           +4.238560208195022e-03 * sin(2.0*l)
           +1.961408105275610e-03 * sin(d)
-           ,2*M_PI);
+          ,2.0*M_PI);
 
   if (is_waxing) {
     *is_waxing = (i <= M_PI);

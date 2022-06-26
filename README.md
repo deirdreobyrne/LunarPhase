@@ -59,6 +59,8 @@ This table gives the maximum error in the period 1970 - 2149 when some terms are
 
 In other words, if an accuracy of 9% is sufficient for your application, you can use `double i = fmod(d, 2*M_PI);` and get rid of the calculations for `double m = ...`  and `double l = ...`.
 
+The formula presented is of the same form as given in Jean Meeus' excellent 1991 book *Astronomical Algorithms* page 346. Meeus' formula is truncated, and has a maximum error of 0.003443 in the period 1970 - 2149.
+
 ## Δt — the boogeyman of astronomical predictions
 
 Astronomical predictions can only be made in a timescale that is uniform. In most cases, that means a timescale known as "TDT". Civil time is based on a different timescale, called "UTC". UTC tries to keep track of the Earth's rotation, so that it is generally around noon when the sun is at its highest. But the Earth's rotation is not uniform - things like earthquakes affect it. So, the difference between the TDT and UTC (imaginatively called Δt) is not constant and not predictable. I adopted a very simple and reasonably accurate formula (for historical times, anyway) for Δt —

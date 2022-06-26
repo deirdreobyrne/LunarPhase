@@ -63,7 +63,7 @@ The formula presented is of the same form as given in Jean Meeus' excellent 1991
 
 ## Δt — the boogeyman of astronomical predictions
 
-Astronomical predictions can only be made in a timescale that is uniform. In most cases, that means a timescale known as "TDT". Civil time is based on a different timescale, called "UTC". UTC tries to keep track of the Earth's rotation, so that it is generally around noon when the sun is at its highest. But the Earth's rotation is not uniform - things like earthquakes affect it. So, the difference between the TDT and UTC (imaginatively called Δt) is not constant and not predictable. I adopted a very simple and reasonably accurate formula (for historical times, anyway) for Δt —
+Astronomical predictions can only be made in a timescale that is uniform. In most cases, that means a timescale known as "TDT". Civil time is based on a different timescale, called "UTC", which is kept to within 0.9 seconds of yet another timescale called "UT1". UT1 keeps track of the Earth's rotation so that it is generally around noon when the sun is at its highest in Greenwich. But the Earth's rotation is not uniform - things like earthquakes affect it. So, the difference between the TDT and UT1 (imaginatively called Δt) is not constant and not predictable. I adopted a very simple and reasonably accurate formula (for historical times, anyway) for Δt —
 
 $$
 \Delta t (seconds) = 45 + 50 { d \over 36525}
